@@ -1,27 +1,24 @@
-package com.rideMatcher.rideservice.event;
+package com.rideMatcher.matchingservice.event;
 
-// event published to kafka when a ride is requested
-// matching service is consumes this event
-// topic: ride.request
+// event consumed from kafka topic: ride.requested
+// published by ride service when a rider requests a ride
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+public class RideRequestedEvent {
 
-public class RideRequestEvent {
-    private String rideId;
     private String riderId;
-    //pickup — JSON name must match matching-service RideRequestedEvent
+    private String rideId;
     private double pickupLatitude;
     private double pickupLongitude;
     private String pickupAddress;
-
-    //drop
     private double dropLatitude;
     private double dropLongitude;
     private String dropAddress;
+
 }

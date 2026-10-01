@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +39,7 @@ public class RideController {
     public ResponseEntity<List<RideResponse>> getRideByRider(
             @PathVariable String riderId
     ){
-        return ResponseEntity.ok(rideService.getRidesByRider(riderId));
+        return ResponseEntity.ok(rideService.getRideByRider(riderId));
     }
 
     @PutMapping("/{rideId}/start")

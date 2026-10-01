@@ -25,12 +25,13 @@ public class LocationController {
     }
 
     //matching service calls this when ride is requested
+    @GetMapping("/drivers/nearby")
     public ResponseEntity<List<NearByDriverResponse>> getNearByDrivers(
             @RequestParam double latitude,
-            @RequestParam double longitutde,
+            @RequestParam double longitude,
             @RequestParam (defaultValue = "5.0") double radius)
         {
-            return ResponseEntity.ok(locationService.findByDrivers(latitude,longitutde, radius));
+            return ResponseEntity.ok(locationService.findNearByDriver(latitude,longitude, radius));
         }
     //called when driver goes offline
     public  ResponseEntity<String> removeDriver(@PathVariable String driverID){

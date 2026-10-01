@@ -10,7 +10,7 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.domain.geo.Metrics;
 import org.springframework.stereotype.Service;
 
@@ -22,28 +22,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LocationService {
     // redis key for all driver locations
-    private  final RedisTemplate<String, String> redisTemplate;
+    private  final StringRedisTemplate redisTemplate;
     private static  final String DRIVERS_GEO_KEY ="drivers:locations";
 
 //     update driver location in redis
 //    called every 3sec by driver's phone
 //    map to redis GEOADD command
 
-    public void updateDriverLocation(DriverLocationRequest driverLocationRequest){
-        log.info("Updating location for dirver: {}", driverLocationRequest.getDriverId());
+    public void updateDriverLocation(DriverLocationRequest driverLocationRequest) {
 
-        // longitude first, latitude second---geospatial standard
+        log.info("Updating location for driver: {}",
+                driverLocationRequest.getDriverId());
+
         Point driverPoint = new Point(
                 driverLocationRequest.getLongitude(),
                 driverLocationRequest.getLatitude()
         );
-        redisTemplate.opsForGeo().add(
+
+        Long result = redisTemplate.opsForGeo().add(
                 DRIVERS_GEO_KEY,
                 driverPoint,
                 driverLocationRequest.getDriverId()
         );
 
-        log.info("Location updates for dirver: {}", driverLocationRequest.getDriverId());
+        log.info("GEOADD result: {}", result);
+
+        var connection =
+                redisTemplate.getConnectionFactory().getConnection();
+
+        log.info("Redis PING: {}", connection.ping());
+
+//        var serverInfo = connection.serverCommands().info("server");
+
+//        log.info("Spring Redis server info: {}", serverInfo);
+
+        log.info("Redis DB size from Spring: {}",
+                connection.serverCommands().dbSize());
+
+        log.info("Location updated for driver: {}",
+                driverLocationRequest.getDriverId());
     }
 
     //find nearby drivers within given radius

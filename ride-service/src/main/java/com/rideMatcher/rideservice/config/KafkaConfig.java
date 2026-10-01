@@ -21,8 +21,9 @@ public class KafkaConfig {
     // topic where matching service publishes match results
     // ride service subscribers to this topic
 
+    @Bean
     public NewTopic rideMatchedTopic(){
-        return TopicBuilder.name("ride.mathced")
+        return TopicBuilder.name("ride.matched")
                 .partitions(3)
                 .replicas(1)
                 .build();
